@@ -3,6 +3,8 @@ package com.axibase.xmpp;
 import org.apache.commons.cli.*;
 
 class ArgumentsManager {
+    private static final int DEFAULT_PORT = 5222;
+
     private CommandLine commandLine;
 
     ArgumentsManager(String[] args) {
@@ -16,7 +18,10 @@ class ArgumentsManager {
         options.addOption(buildOption("domain", "DOMAIN"));
         options.addOption(buildOption("insecure"));
         options.addOption(buildOption("debug"));
-        options.addOption(buildOption("plain-auth"));
+
+        options.addOption(Option.builder().longOpt("enable-auth").hasArgs().build());
+        options.addOption(Option.builder().longOpt("disable-auth").hasArgs().build());
+
         try {
             commandLine = parser.parse(options, args);
         } catch (ParseException e) {
@@ -32,18 +37,59 @@ class ArgumentsManager {
         return Option.builder().longOpt(optionName).hasArg().argName(argName).build();
     }
 
-    public String getOption(String optionName) {
-        return commandLine.getOptionValue(optionName);
+    public String getUser() {
+        return getRequiredOption("user");
     }
 
-    public String getOption(String optionName, boolean required) {
-        if (!commandLine.hasOption(optionName)) {
-            Errors.errorExit("Option " + optionName + " is required");
+    public String getPassword() {
+        return getRequiredOption("password");
+    }
+
+    public String getHost() {
+        return getRequiredOption("host");
+    }
+
+    public int getPort() {
+        if (!commandLine.hasOption("port")) {
+            return DEFAULT_PORT;
         }
-        return commandLine.getOptionValue(optionName);
+        return Integer.valueOf(getRequiredOption("port"));
     }
 
-    public boolean getBooleanOption(String optionName) {
-        return commandLine.hasOption(optionName);
+    public String getDomain() {
+        String domain = commandLine.getOptionValue("domain");
+        if (domain != null) {
+            return domain;
+        }
+        String jid = getUser();
+        int atSignPosition = jid.indexOf('@');
+        if (atSignPosition >= 0) {
+            return jid.substring(atSignPosition + 1);
+        }
+        Errors.errorExit("Cannot set XMPP domain, please specify --domain option");
+        return null;
+    }
+
+    public String[] getEnabledAuthMethods() {
+        return commandLine.getOptionValues("enable-auth");
+    }
+
+    public String[] getDisabledAuthMethods() {
+        return commandLine.getOptionValues("disable-auth");
+    }
+
+    public boolean getInsecure() {
+        return commandLine.hasOption("insecure");
+    }
+
+    public boolean getDebug() {
+        return commandLine.hasOption("debug");
+    }
+
+    private String getRequiredOption(String name) {
+        if (!commandLine.hasOption(name)) {
+            Errors.errorExit("Option --" + name + " is required");
+        }
+        return commandLine.getOptionValue(name);
     }
 }

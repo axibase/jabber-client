@@ -25,14 +25,15 @@ public class TestText {
         Scanner inputScanner = new Scanner(System.in);
         ArgumentsManager options = new ArgumentsManager(args);
 
-        String user = options.getOption("user", true);
-        String password = options.getOption("password", true);
-        String domain = options.getOption("domain", true);
-        String host = options.getOption("host", true);
-        String port = options.getOption("port", true);
-        boolean insecure = options.getBooleanOption("insecure");
-        boolean debug = options.getBooleanOption("debug");
-        boolean plain = options.getBooleanOption("plain-auth");
+        String user = options.getUser();
+        String password = options.getPassword();
+        String domain = options.getDomain();
+        String host = options.getHost();
+        int port = options.getPort();
+        boolean insecure = options.getInsecure();
+        boolean debug = options.getDebug();
+        String[] enabledAuth = options.getEnabledAuthMethods();
+        String[] disabledAuth = options.getDisabledAuthMethods();
 
         XMPPTCPConnectionConfiguration config = null;
         try {
@@ -41,7 +42,7 @@ public class TestText {
                     .setXmppDomain(domain)
                     .setResource(CLIENT_RESOURCE)
                     .setHost(host)
-                    .setPort(Integer.valueOf(port));
+                    .setPort(port);
             if (insecure) {
                 configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
             }
@@ -53,9 +54,15 @@ public class TestText {
             Errors.errorExit("Cannot create connection configuration", e);
         }
 
-        if (plain) {
-            SASLAuthentication.unBlacklistSASLMechanism("PLAIN");
-            SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
+        if (enabledAuth != null) {
+            for (String authMethod : enabledAuth) {
+                SASLAuthentication.unBlacklistSASLMechanism(authMethod);
+            }
+        }
+        if (disabledAuth != null) {
+            for (String authMethod : disabledAuth) {
+                SASLAuthentication.blacklistSASLMechanism(authMethod);
+            }
         }
 
         XMPPTCPConnection xmppConnection = new XMPPTCPConnection(config);
