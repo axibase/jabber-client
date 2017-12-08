@@ -18,13 +18,16 @@ with XMPP (Jabber) protocol
 
 ## Running the application
 
-Navigate to directory with extracted JAR file
+Download zip archive from this [link](https://github.com/axibase/jabber-test/releases/download/v1.0/jabber-test.zip).
+Extract archive contents to a new directory and navigate to it
 
 ```
-cd path-to-jar
+mkdir jabber-test
+unzip jabber-test.zip -d jabber-test
+cd jabber-test
 ```
 
-Run attached JAR file with command using result from login test by
+Run extracted jar file with command using result from [login test](../jabber-test-login/README.md) by
 disabling failed and enabling succeeded authentication mechanisms
 
 ```

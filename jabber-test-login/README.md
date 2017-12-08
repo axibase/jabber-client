@@ -17,13 +17,16 @@ server with different SASL mechanism
 
 ## Running the application
 
-Navigate to directory with extracted JAR file
+Download zip archive from the [link](https://github.com/axibase/jabber-test/releases/download/v1.0/jabber-test.zip).
+Extract archive contents to a new directory and navigate to it
 
 ```
-cd path-to-jar
+mkdir jabber-test
+unzip jabber-test.zip -d jabber-test
+cd jabber-test
 ```
 
-Run attached JAR file with command
+Run extracted jar file with command
 
 ```
 java -jar jabber-test-login.jar \
