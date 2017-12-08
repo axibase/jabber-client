@@ -47,7 +47,7 @@ In case you faced some problems, try to run the application again with
 `--debug` option and examine `debug.log` file contents.
 
  ```
- java -jar jabber-test-text.jar \
+ java -jar jabber-test-login.jar \
      --user=user1@example.com \
      --password=user1_password \
      --host=example.com \
@@ -59,7 +59,7 @@ In case you faced some problems, try to run the application again with
 If you have SSL/TLS errors, try adding `--insecure` option
 
 ```
- java -jar jabber-test-text.jar \
+ java -jar jabber-test-login.jar \
      --user=user1@example.com \
      --password=user1_password \
      --host=example.com \
