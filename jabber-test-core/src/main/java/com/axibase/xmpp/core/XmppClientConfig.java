@@ -1,13 +1,13 @@
-package com.axibase.xmpp;
+package com.axibase.xmpp.core;
 
 import org.apache.commons.cli.*;
 
-class ArgumentsManager {
+public class XmppClientConfig {
     private static final int DEFAULT_PORT = 5222;
 
     private CommandLine commandLine;
 
-    ArgumentsManager(String[] args) {
+    public XmppClientConfig(String[] args) {
         CommandLineParser parser = new DefaultParser();
 
         Options options = new Options();
@@ -25,7 +25,7 @@ class ArgumentsManager {
         try {
             commandLine = parser.parse(options, args);
         } catch (ParseException e) {
-            Errors.errorExit("Invalid arguments", e);
+            throw Errors.errorExit("Invalid arguments", e);
         }
     }
 
@@ -66,8 +66,7 @@ class ArgumentsManager {
         if (atSignPosition >= 0) {
             return jid.substring(atSignPosition + 1);
         }
-        Errors.errorExit("Cannot set XMPP domain, please specify --domain option");
-        return null;
+        throw Errors.errorExit("Cannot set XMPP domain, please specify --domain option");
     }
 
     public String[] getEnabledAuthMethods() {
@@ -88,7 +87,7 @@ class ArgumentsManager {
 
     private String getRequiredOption(String name) {
         if (!commandLine.hasOption(name)) {
-            Errors.errorExit("Option --" + name + " is required");
+            throw Errors.errorExit("Option --" + name + " is required");
         }
         return commandLine.getOptionValue(name);
     }
