@@ -18,6 +18,8 @@ public class XmppClientConfig {
         options.addOption(buildOption("domain", "DOMAIN"));
         options.addOption(buildOption("auth", "MECHANISM"));
         options.addOption(buildOption("to", "JID"));
+        options.addOption(buildOption("nick", "NAME"));
+        options.addOption(buildOption("room-password", "PASSWORD"));
         options.addOption(buildOption("insecure"));
         options.addOption(buildOption("debug"));
 
@@ -82,6 +84,14 @@ public class XmppClientConfig {
 
     public String getTo() {
         return getRequiredOption("to");
+    }
+
+    public String getNick() {
+        return getRequiredOption("nick");
+    }
+
+    public String getRoomPassword() {
+        return commandLine.getOptionValue("room-password");
     }
 
     private String getRequiredOption(String name) {

@@ -56,11 +56,11 @@ Login with ANONYMOUS FAIL
 In case you faced some problems, try to run the application again with
 `--debug` option and examine `debug.log` file contents.
 
- ```
- java -jar jabber-test-login.jar \
-     --user=user1@example.com \
-     --password=user1_password \
-     --host=example.com \
-     --insecure \
-     --debug
- ```
+```
+java -jar jabber-test-login.jar \
+    --user=user1@example.com \
+    --password=user1_password \
+    --host=example.com \
+    --insecure \
+    --debug
+```

@@ -10,8 +10,12 @@ import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatException;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.io.IOException;
@@ -50,7 +54,7 @@ public class SimpleXmppClient {
 
         String auth = config.getAuth();
         if (auth != null) {
-            useOnlySaslMechanism(auth);
+            useSingleSaslMechanism(auth);
         }
 
         this.xmppConnection = new XMPPTCPConnection(connectionConfig);
@@ -74,7 +78,7 @@ public class SimpleXmppClient {
         return mechanismNameList;
     }
 
-    public static void useOnlySaslMechanism(String mechanism) {
+    public static void useSingleSaslMechanism(String mechanism) {
         Collection<String> registeredMechanisms = getSaslMechanisms();
         for (String registeredMechanism : registeredMechanisms) {
             SASLAuthentication.blacklistSASLMechanism(registeredMechanism);
@@ -111,6 +115,32 @@ public class SimpleXmppClient {
         ChatManager chatManager = ChatManager.getInstanceFor(xmppConnection);
         Chat chat = chatManager.chatWith(jid);
 
-        return new SimpleXmppChat(chat, jid);
+        return new UserXmppChat(chat, jid);
+    }
+
+    public SimpleXmppChat getChatRoom(String strJid, String nickName, String password) throws XmppClientException {
+        MultiUserChatManager mucManager = MultiUserChatManager.getInstanceFor(xmppConnection);
+        EntityBareJid jid;
+        try {
+            jid = JidCreate.entityBareFrom(strJid);
+        } catch (XmppStringprepException e) {
+            throw new XmppClientException("Incorrect room ID", e);
+        }
+        MultiUserChat muc = mucManager.getMultiUserChat(jid);
+        try {
+            if (password == null) {
+                muc.join(Resourcepart.from(nickName));
+            } else {
+                muc.join(Resourcepart.from(nickName), password);
+            }
+        } catch (SmackException.NoResponseException |
+                XMPPException.XMPPErrorException |
+                SmackException.NotConnectedException |
+                MultiUserChatException.NotAMucServiceException |
+                InterruptedException |
+                XmppStringprepException e) {
+            throw new XmppClientException("Cannot join room", e);
+        }
+        return new RoomXmppChat(muc);
     }
 }

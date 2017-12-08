@@ -36,7 +36,8 @@ java -jar jabber-test-text.jar \
     --password=user1_password \
     --host=example.com \
     --insecure \
-    --auth=DIGEST-MD5
+    --auth=DIGEST-MD5 \
+    --to=user2@example.com
 ```
 
 The example based on the results below
@@ -68,12 +69,13 @@ Also, ensure that message is delivered to the user.
 In case you faced some problems, try to run the application again with
 `--debug` option and examine `debug.log` file contents.
 
- ```
- java -jar jabber-test-text.jar \
-     --user=user1@example.com \
-     --password=user1_password \
-     --host=example.com \
-     --insecure \
-     --auth=DIGEST-MD5 \
-     --debug
- ```
+```
+java -jar jabber-test-text.jar \
+    --user=user1@example.com \
+    --password=user1_password \
+    --host=example.com \
+    --insecure \
+    --auth=DIGEST-MD5 \
+    --to=user2@example.com \
+    --debug
+```

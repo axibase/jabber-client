@@ -23,7 +23,7 @@ public class TestLogin {
             } catch (XmppClientException e) {
                 throw Errors.errorExit("Cannot initialize XMPP client", e);
             }
-            SimpleXmppClient.useOnlySaslMechanism(mechanismName);
+            SimpleXmppClient.useSingleSaslMechanism(mechanismName);
 
             boolean loginSuccess = true;
             try {
