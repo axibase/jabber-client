@@ -57,7 +57,7 @@ Login with ANONYMOUS FAIL
 ```
 
 Application will perform login and then send _Hello_ message
-to the selected user. The result should be
+to the selected room. The result should be
 
 ```
 Login: OK
