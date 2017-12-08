@@ -1,4 +1,4 @@
-# Test for authentication
+# Test for text message
 
 This sample application is aimed to test sending simple text messages
 with XMPP (Jabber) protocol
