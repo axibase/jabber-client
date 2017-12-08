@@ -31,9 +31,6 @@ public class SimpleXmppClient {
     private XMPPTCPConnection xmppConnection;
     
     public SimpleXmppClient(XmppClientConfig config) throws XmppClientException {
-        String[] enabledAuth = config.getEnabledAuthMethods();
-        String[] disabledAuth = config.getDisabledAuthMethods();
-
         XMPPTCPConnectionConfiguration connectionConfig = null;
         try {
             XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
@@ -51,16 +48,9 @@ public class SimpleXmppClient {
             throw new XmppClientException("Incorrect user ID", e);
         }
 
-        if (enabledAuth != null) {
-            for (String auth : enabledAuth) {
-                SASLAuthentication.unBlacklistSASLMechanism(auth);
-            }
-        }
-
-        if (disabledAuth != null) {
-            for (String auth : disabledAuth) {
-                SASLAuthentication.blacklistSASLMechanism(auth);
-            }
+        String auth = config.getAuth();
+        if (auth != null) {
+            useOnlySaslMechanism(auth);
         }
 
         this.xmppConnection = new XMPPTCPConnection(connectionConfig);

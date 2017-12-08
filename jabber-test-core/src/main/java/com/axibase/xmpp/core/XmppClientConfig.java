@@ -16,11 +16,10 @@ public class XmppClientConfig {
         options.addOption(buildOption("host", "HOST"));
         options.addOption(buildOption("port", "PORT"));
         options.addOption(buildOption("domain", "DOMAIN"));
+        options.addOption(buildOption("auth", "MECHANISM"));
+        options.addOption(buildOption("to", "JID"));
         options.addOption(buildOption("insecure"));
         options.addOption(buildOption("debug"));
-
-        options.addOption(Option.builder().longOpt("enable-auth").hasArgs().build());
-        options.addOption(Option.builder().longOpt("disable-auth").hasArgs().build());
 
         try {
             commandLine = parser.parse(options, args);
@@ -69,12 +68,8 @@ public class XmppClientConfig {
         throw Errors.errorExit("Cannot set XMPP domain, please specify --domain option");
     }
 
-    public String[] getEnabledAuthMethods() {
-        return commandLine.getOptionValues("enable-auth");
-    }
-
-    public String[] getDisabledAuthMethods() {
-        return commandLine.getOptionValues("disable-auth");
+    public String getAuth() {
+        return commandLine.getOptionValue("auth");
     }
 
     public boolean getInsecure() {
@@ -83,6 +78,10 @@ public class XmppClientConfig {
 
     public boolean getDebug() {
         return commandLine.hasOption("debug");
+    }
+
+    public String getTo() {
+        return getRequiredOption("to");
     }
 
     private String getRequiredOption(String name) {

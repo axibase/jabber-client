@@ -8,6 +8,7 @@ public class TestText {
 
     public static void main(String[] args) {
         XmppClientConfig config = new XmppClientConfig(args);
+        String userId = config.getTo();
 
         SimpleXmppClient client;
         try {
@@ -23,9 +24,6 @@ public class TestText {
         }
         System.out.println("Login: OK");
 
-        Scanner inputScanner = new Scanner(System.in);
-        System.out.println("Enter user ID to send messages to: ");
-        String userId = inputScanner.nextLine();
 
         SimpleXmppChat chat;
         try {
