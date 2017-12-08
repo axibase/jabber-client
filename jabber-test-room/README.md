@@ -1,22 +1,22 @@
-# Test for text message
+# Test for text message (rooms)
 
 This sample application is aimed to test sending simple text messages
 with XMPP (Jabber) protocol
 
 ## Application arguments
 
-| Option            | Argument                              | Required | Comment                                                                     |
-|-------------------|---------------------------------------|----------|-----------------------------------------------------------------------------|
-| `--user         ` | User ID in username@domain format.    | Yes      |                                                                             |
-| `--password     ` | User password.                        | Yes      |                                                                             |
-| `--domain       ` | XMPP domain.                          | No       | Without this option XMPP domain is set to domain part of user ID.           |
-| `--host         ` | XMPP server address.                  | Yes      | Usually it is the same as XMPP domain.                                      |
-| `--insecure     ` | No.                                   | No       | Allows to connect to server with invalid/untrusted certificate              |
-| `--debug        ` | No.                                   | No       | Enables debug output of the application. It is written to `debug.log` file. |
-| `--auth         ` | Name of SASL mechanim.                | No       | Use the specified authentication mechanism.                                 |
-| `--to           ` | Room ID in roomname@service format.   | Yes      | Room ID to join                                                             |
-| `--nick         ` | Nickname for the room without spaces. | Yes      |                                                                             |
-| `--room-password` | Room password.                        | No       |                                                                             |
+| Option            | Argument                                          | Required | Comment                                                                     |
+|-------------------|---------------------------------------------------|----------|-----------------------------------------------------------------------------|
+| `--user         ` | User ID in username@domain format.                | Yes      |                                                                             |
+| `--password     ` | User password.                                    | Yes      |                                                                             |
+| `--domain       ` | XMPP domain.                                      | No       | Without this option XMPP domain is set to domain part of user ID.           |
+| `--host         ` | XMPP server address.                              | Yes      | Usually it is the same as XMPP domain.                                      |
+| `--insecure     ` | No.                                               | No       | Allows to connect to server with invalid/untrusted certificate              |
+| `--debug        ` | No.                                               | No       | Enables debug output of the application. It is written to `debug.log` file. |
+| `--auth         ` | Name of SASL mechanim.                            | No       | Use the specified authentication mechanism.                                 |
+| `--to           ` | Room ID in roomname@service format.               | Yes      | Room ID to join                                                             |
+| `--nick         ` | Nickname of the user in the room, without spaces. | Yes      |                                                                             |
+| `--room-password` | Room password.                                    | No       |                                                                             |
 
 ## Running the application
 
