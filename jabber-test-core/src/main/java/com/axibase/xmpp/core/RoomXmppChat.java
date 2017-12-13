@@ -1,19 +1,32 @@
 package com.axibase.xmpp.core;
 
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.util.XmlStringBuilder;
 import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
+import org.jivesoftware.smackx.xhtmlim.XHTMLText;
 
-public class RoomXmppChat implements SimpleXmppChat {
-    MultiUserChat muc;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 
-    public RoomXmppChat(MultiUserChat muc) {
+public class RoomXmppChat extends AbstractXmppChat {
+    private MultiUserChat muc;
+
+    RoomXmppChat(MultiUserChat muc) {
         this.muc = muc;
     }
 
     @Override
-    public void sendText(String text) throws XmppClientException {
+    protected Message newMessage() {
+        return muc.createMessage();
+    }
+
+    @Override
+    protected void sendMessage(Message m) throws XmppClientException {
         try {
-            muc.sendMessage("Hello");
+            muc.sendMessage(m);
         } catch (SmackException.NotConnectedException e) {
             throw new XmppClientException("Cannot send message, not connected", e);
         } catch (InterruptedException e) {

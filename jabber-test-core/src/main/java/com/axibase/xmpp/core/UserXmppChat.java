@@ -5,7 +5,7 @@ import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.jxmpp.jid.Jid;
 
-public class UserXmppChat implements SimpleXmppChat {
+class UserXmppChat extends AbstractXmppChat {
     private Chat peerChat;
     private Jid peerJid;
 
@@ -15,9 +15,12 @@ public class UserXmppChat implements SimpleXmppChat {
     }
 
     @Override
-    public void sendText(String text) throws XmppClientException {
-        Message m = new Message(peerJid, Message.Type.chat);
-        m.setBody(text);
+    protected Message newMessage() {
+        return new Message(peerJid, Message.Type.chat);
+    }
+
+    @Override
+    protected void sendMessage(Message m) throws XmppClientException {
         try {
             peerChat.send(m);
         } catch (SmackException.NotConnectedException e) {
@@ -25,9 +28,5 @@ public class UserXmppChat implements SimpleXmppChat {
         } catch (InterruptedException e) {
             throw Errors.errorExit("Unknown error", e);
         }
-    }
-
-    @Override
-    public void leave() {
     }
 }
