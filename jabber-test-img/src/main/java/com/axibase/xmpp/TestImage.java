@@ -33,5 +33,6 @@ public class TestImage {
         } catch (XmppClientException e) {
             throw Errors.errorExit("Cannot send image", e);
         }
+        System.out.println("Sending message: OK");
     }
 }
