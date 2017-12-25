@@ -40,14 +40,26 @@ The application will try to authenticate on the server using different
 authentication methods and print results
 
 ```
+Will connect to host=example.com port=5222
+password=**************
+user=user1@example.com
+domain=example.com
+insecure enabled
+debug.log enabled
 Login with GSSAPI FAIL
+Authentication with GSSAPI mechanism failed: Cannot perform login
+Authentication with SCRAM-SHA-1-PLUS mechanism failed: Cannot perform login
 Login with SCRAM-SHA-1-PLUS FAIL
 Login with SCRAM-SHA-1 FAIL
+Authentication with SCRAM-SHA-1 mechanism failed: Cannot perform login
 Login with DIGEST-MD5 OK
 Login with CRAM-MD5 OK
 Login with PLAIN OK
 Login with X-OAUTH2 FAIL
+Authentication with X-OAUTH2 mechanism failed: Cannot perform login
 Login with EXTERNAL FAIL
+Authentication with EXTERNAL mechanism failed: Cannot perform login
+Authentication with ANONYMOUS mechanism failed: Cannot perform login
 Login with ANONYMOUS FAIL
 ```
 

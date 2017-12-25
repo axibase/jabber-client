@@ -35,7 +35,7 @@ public class SimpleXmppClient {
     private XMPPTCPConnection xmppConnection;
     
     public SimpleXmppClient(XmppClientConfig config) throws XmppClientException {
-        XMPPTCPConnectionConfiguration connectionConfig = null;
+        XMPPTCPConnectionConfiguration connectionConfig;
         try {
             XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
             configBuilder.setUsernameAndPassword(config.getUser(), config.getPassword())
@@ -89,12 +89,14 @@ public class SimpleXmppClient {
     public void login() throws XmppClientException {
         try {
             xmppConnection.connect();
+            Debug.info("Successfully connected to host");
         } catch (SmackException | IOException | XMPPException | InterruptedException e) {
             throw new XmppClientException("Cannot establish connection", e);
         }
 
         try {
             xmppConnection.login();
+            Debug.info("Successfully performed login");
         } catch (SmackException | IOException | XMPPException | InterruptedException e) {
             throw new XmppClientException("Cannot perform login", e);
         }

@@ -1,22 +1,26 @@
 package com.axibase.xmpp;
 
-import com.axibase.xmpp.core.Errors;
-import com.axibase.xmpp.core.SimpleXmppClient;
-import com.axibase.xmpp.core.XmppClientConfig;
-import com.axibase.xmpp.core.XmppClientException;
+import com.axibase.xmpp.core.*;
 import org.jivesoftware.smack.SmackInitialization;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class TestLogin {
     public static void main(String[] args) {
         new SmackInitialization();
 
+        XmppClientConfig config = new XmppClientConfig(args);
         Collection<String> mechanismNameList = SimpleXmppClient.getSaslMechanisms();
 
-        for (String mechanismName : mechanismNameList) {
-            XmppClientConfig config = new XmppClientConfig(args);
+        Debug.message("Will connect to host=" + config.getHost() + " port=" + config.getPort());
+        Debug.message("password=" + String.join("", Collections.nCopies(config.getPassword().length(), "*")));
+        Debug.message("user=" + config.getUser());
+        Debug.message("domain=" + config.getDomain());
+        Debug.message("insecure " + (config.getInsecure() ? "enabled" : "disabled"));
+        Debug.message("debug.log " + (config.getDebug() ? "enabled" : "disabled"));
 
+        for (String mechanismName : mechanismNameList) {
             SimpleXmppClient client;
             try {
                 client = new SimpleXmppClient(config);
@@ -30,6 +34,7 @@ public class TestLogin {
                 client.login();
                 client.disconnect();
             } catch (XmppClientException e) {
+                Debug.complain("Authentication with " + mechanismName + " mechanism failed", e);
                 loginSuccess = false;
             }
             System.out.println("Login with " + mechanismName + (loginSuccess ? " OK" : " FAIL"));
