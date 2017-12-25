@@ -39,7 +39,11 @@ public class XmppClientConfig {
     }
 
     public String getUser() {
-        return getRequiredOption("user");
+        String user = getRequiredOption("user");
+        if (user.contains("@")) {
+            user = user.substring(0, user.indexOf('@'));
+        }
+        return user;
     }
 
     public String getPassword() {
@@ -62,7 +66,7 @@ public class XmppClientConfig {
         if (domain != null) {
             return domain;
         }
-        String jid = getUser();
+        String jid = getRequiredOption("user");
         int atSignPosition = jid.indexOf('@');
         if (atSignPosition >= 0) {
             return jid.substring(atSignPosition + 1);
