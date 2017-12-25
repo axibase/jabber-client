@@ -11,6 +11,7 @@ with XMPP (Jabber) protocol
 | `--password     ` | User password.                                    | Yes      |                                                                             |
 | `--domain       ` | XMPP domain.                                      | No       | Without this option XMPP domain is set to domain part of user ID.           |
 | `--host         ` | XMPP server address.                              | Yes      | Usually it is the same as XMPP domain.                                      |
+| `--port         ` | XMPP server port.                                 | No       | Set to 5222 by default.                                                     |
 | `--insecure     ` | No.                                               | No       | Allows to connect to server with invalid/untrusted certificate              |
 | `--debug        ` | No.                                               | No       | Enables debug output of the application. It is written to `debug.log` file. |
 | `--auth         ` | Name of SASL mechanim.                            | No       | Use the specified authentication mechanism.                                 |
@@ -37,6 +38,7 @@ java -jar jabber-test-room.jar \
     --user=user1@example.com \
     --password=user1_password \
     --host=example.com \
+    --port=5222 \
     --insecure \
     --auth=DIGEST-MD5 \
     --to=room@conference.example.com \
@@ -80,6 +82,7 @@ java -jar jabber-test-room.jar \
     --user=user1@example.com \
     --password=user1_password \
     --host=example.com \
+    --port=5222 \
     --insecure \
     --auth=DIGEST-MD5 \
     --to=room@conference.example.com \
