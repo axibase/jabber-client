@@ -1,7 +1,7 @@
-# Test for text message (rooms)
+# Test for discovering MUC service
 
-This sample application is aimed to test sending simple text messages
-with XMPP (Jabber) protocol
+This sample application is aimed to get information about Multi-user
+chat service from XMPP (Jabber) server
 
 ## Application arguments
 
@@ -15,9 +15,6 @@ with XMPP (Jabber) protocol
 | `--insecure     ` | No.                                               | No       | Allows to connect to server with invalid/untrusted certificate              |
 | `--debug        ` | No.                                               | No       | Enables debug output of the application. It is written to `debug.log` file. |
 | `--auth         ` | Name of SASL mechanim.                            | No       | Use the specified authentication mechanism.                                 |
-| `--to           ` | Room ID in roomname@service format.               | Yes      | Room ID to join                                                             |
-| `--nick         ` | Nickname of the user in the room, without spaces. | Yes      |                                                                             |
-| `--room-password` | Room password.                                    | No       |                                                                             |
 
 ## Running the application
 
@@ -31,9 +28,7 @@ cd jabber-test
 ```
 
 Run extracted jar file with command using result from [login test](../jabber-test-login/README.md) by
-enabling one of succeeded authentication mechanisms. Also, ensure that
-MUC service is available on domain part of the room ID (`conference.example.com`
-in this example) using [item test](../jabber-test-item/README.md)
+enabling one of succeeded authentication mechanisms
 
 ```
 java -jar jabber-test-room.jar \
@@ -42,13 +37,10 @@ java -jar jabber-test-room.jar \
     --host=example.com \
     --port=5222 \
     --insecure \
-    --auth=DIGEST-MD5 \
-    --to=room@conference.example.com \
-    --nick=MyName \
-    --room-password=room_password
+    --auth=DIGEST-MD5
 ```
 
-The example based on the results of login test below
+The example based on the results below
 
 ```
 Login with GSSAPI FAIL
@@ -62,17 +54,13 @@ Login with EXTERNAL FAIL
 Login with ANONYMOUS FAIL
 ```
 
-Application will perform login and then send _Hello_ message
-to the selected room. The result should be
+Application will request information about MUC service from the server
 
 ```
 Login: OK
-Join room: OK
-Sending message: OK
-Leave room: OK
+Request service items: OK
+MUC services: conference.example.com
 ```
-
-Also, ensure that message is delivered to the room members.
 
 ## Troubleshooting
 
@@ -87,8 +75,5 @@ java -jar jabber-test-room.jar \
     --port=5222 \
     --insecure \
     --auth=DIGEST-MD5 \
-    --to=room@conference.example.com \
-    --nick=MyName \
-    --room-password=room_password \
     --debug
 ```

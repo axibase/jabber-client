@@ -2,11 +2,9 @@ package com.axibase.xmpp;
 
 import com.axibase.xmpp.core.*;
 
-public class TestText {
-
+public class TestEcho {
     public static void main(String[] args) {
         XmppClientConfig config = new XmppClientConfig(args);
-        String userId = config.getTo();
 
         SimpleXmppClient client;
         try {
@@ -22,18 +20,20 @@ public class TestText {
         }
         System.out.println("Login: OK");
 
-        SimpleXmppChat chat;
-        try {
-            chat = client.getChatWith(userId);
-        } catch (XmppClientException e) {
-            throw Errors.errorExit("Cannot start chat with selected user", e);
-        }
+        client.handleMessages((from, message, chat) -> {
+            Debug.message("Received message from " + from + ": " + message);
+            try {
+                chat.sendText(message);
+                System.out.println("Sending message to " + from + ": OK");
+            } catch (XmppClientException e) {
+                Debug.complain("Failed to send message", e);
+            }
+        });
 
         try {
-            chat.sendText("Hello");
-        } catch (XmppClientException e) {
-            throw Errors.errorExit("Failed to send message", e);
+            Thread.sleep(Long.MAX_VALUE);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        System.out.println("Sending message: OK");
     }
 }

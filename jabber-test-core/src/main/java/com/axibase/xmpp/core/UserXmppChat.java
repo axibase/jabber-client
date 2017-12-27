@@ -3,20 +3,17 @@ package com.axibase.xmpp.core;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.packet.Message;
-import org.jxmpp.jid.Jid;
 
 class UserXmppChat extends AbstractXmppChat {
     private Chat peerChat;
-    private Jid peerJid;
 
-    UserXmppChat(Chat peerChat, Jid peerJid) {
+    UserXmppChat(Chat peerChat) {
         this.peerChat = peerChat;
-        this.peerJid = peerJid;
     }
 
     @Override
     protected Message newMessage() {
-        return new Message(peerJid, Message.Type.chat);
+        return new Message(peerChat.getXmppAddressOfChatPartner(), Message.Type.chat);
     }
 
     @Override

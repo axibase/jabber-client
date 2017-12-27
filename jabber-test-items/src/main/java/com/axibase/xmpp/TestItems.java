@@ -2,11 +2,13 @@ package com.axibase.xmpp;
 
 import com.axibase.xmpp.core.*;
 
-public class TestText {
+import java.util.List;
+
+public class TestItems {
+    private static final String MUC_FEATURE = "http://jabber.org/protocol/muc";
 
     public static void main(String[] args) {
         XmppClientConfig config = new XmppClientConfig(args);
-        String userId = config.getTo();
 
         SimpleXmppClient client;
         try {
@@ -22,18 +24,16 @@ public class TestText {
         }
         System.out.println("Login: OK");
 
-        SimpleXmppChat chat;
         try {
-            chat = client.getChatWith(userId);
+            List<String> mucServices = client.requestItems(MUC_FEATURE);
+            System.out.println("Request service items: OK");
+            System.out.print("MUC services:");
+            for (String service : mucServices) {
+                System.out.print(" " + service);
+            }
+            System.out.println();
         } catch (XmppClientException e) {
-            throw Errors.errorExit("Cannot start chat with selected user", e);
+            Debug.complain("Cannot request service items", e);
         }
-
-        try {
-            chat.sendText("Hello");
-        } catch (XmppClientException e) {
-            throw Errors.errorExit("Failed to send message", e);
-        }
-        System.out.println("Sending message: OK");
     }
 }

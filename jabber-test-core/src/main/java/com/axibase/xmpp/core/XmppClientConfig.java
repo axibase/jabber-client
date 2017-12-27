@@ -2,6 +2,9 @@ package com.axibase.xmpp.core;
 
 import org.apache.commons.cli.*;
 
+import java.nio.file.Path;
+import java.util.Collections;
+
 public class XmppClientConfig {
     private static final int DEFAULT_PORT = 5222;
 
@@ -28,6 +31,8 @@ public class XmppClientConfig {
         } catch (ParseException e) {
             throw Errors.errorExit("Invalid arguments", e);
         }
+
+        logOptions();
     }
 
     private Option buildOption(String optionName) {
@@ -36,6 +41,26 @@ public class XmppClientConfig {
 
     private Option buildOption(String optionName, String argName) {
         return Option.builder().longOpt(optionName).hasArg().argName(argName).build();
+    }
+
+    private void logOptions() {
+        for (Option opt : commandLine.getOptions()) {
+            StringBuilder message = new StringBuilder();
+            String optionName = opt.getLongOpt();
+            message.append(optionName);
+            if (opt.hasArg()) {
+                message.append(" =");
+                for (String value : opt.getValues()) {
+                    if (optionName.equals("password")) {
+                        value = String.join("", Collections.nCopies(value.length(), "*"));
+                    }
+                    message.append(" ").append(value);
+                }
+            } else {
+                message.append(" is enabled");
+            }
+            Debug.info(message.toString());
+        }
     }
 
     public String getUser() {

@@ -1,19 +1,20 @@
 package com.axibase.xmpp.core;
 
 
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SASLAuthentication;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
+import org.jivesoftware.smackx.disco.packet.DiscoverItems;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatException;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
@@ -57,7 +58,10 @@ public class SimpleXmppClient {
             useSingleSaslMechanism(auth);
         }
 
-        this.xmppConnection = new XMPPTCPConnection(connectionConfig);
+        this.config = config;
+
+        xmppConnection = new XMPPTCPConnection(connectionConfig);
+        xmppConnection.setFromMode(XMPPConnection.FromMode.USER);
     }
 
     public static Collection<String> getSaslMechanisms() {
@@ -94,6 +98,10 @@ public class SimpleXmppClient {
             throw new XmppClientException("Cannot establish connection", e);
         }
 
+        if (!xmppConnection.isConnected()) {
+            throw new XmppClientException("Not connected");
+        }
+
         try {
             xmppConnection.login();
             Debug.info("Successfully performed login");
@@ -104,6 +112,13 @@ public class SimpleXmppClient {
 
     public void disconnect() {
         xmppConnection.disconnect();
+    }
+
+    public void handleMessages(MessageHandler mh) {
+        ChatManager chatManager = ChatManager.getInstanceFor(xmppConnection);
+        chatManager.addIncomingListener((from, message, chat) -> {
+            mh.handleMessage(from.toString(), message.getBody(), new UserXmppChat(chat));
+        });
     }
 
     public SimpleXmppChat getChatWith(String strJid) throws XmppClientException {
@@ -117,7 +132,7 @@ public class SimpleXmppClient {
         ChatManager chatManager = ChatManager.getInstanceFor(xmppConnection);
         Chat chat = chatManager.chatWith(jid);
 
-        return new UserXmppChat(chat, jid);
+        return new UserXmppChat(chat);
     }
 
     public SimpleXmppChat getChatRoom(String strJid, String nickName, String password) throws XmppClientException {
@@ -144,5 +159,32 @@ public class SimpleXmppClient {
             throw new XmppClientException("Cannot join room", e);
         }
         return new RoomXmppChat(muc);
+    }
+
+    public List<String> requestItems(String feature) throws XmppClientException {
+        List<String> featureServices = new ArrayList<>();
+        ServiceDiscoveryManager discoveryManager = ServiceDiscoveryManager.getInstanceFor(xmppConnection);
+        DiscoverItems discoverItems;
+        try {
+            discoverItems = discoveryManager.discoverItems(JidCreate.from(config.getDomain()));
+        } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | InterruptedException
+                | SmackException.NotConnectedException | XmppStringprepException e) {
+            throw new XmppClientException("Cannot request node items", e);
+        }
+        for (DiscoverItems.Item item : discoverItems.getItems()) {
+            Jid itemId = item.getEntityID();
+            DiscoverInfo itemInfo;
+            try {
+                itemInfo = discoveryManager.discoverInfo(itemId);
+            } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException
+                    | SmackException.NotConnectedException | InterruptedException e) {
+                throw new XmppClientException("Cannot request information for item", e);
+            }
+            boolean mucService = itemInfo.containsFeature(feature);
+            if (mucService) {
+                featureServices.add(itemId.toString());
+            }
+        }
+        return featureServices;
     }
 }

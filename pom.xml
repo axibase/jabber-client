@@ -24,6 +24,8 @@
         <module>jabber-test-text</module>
         <module>jabber-test-room</module>
         <module>jabber-test-img</module>
+        <module>jabber-test-echo</module>
+        <module>jabber-test-items</module>
     </modules>
 
     <build>
