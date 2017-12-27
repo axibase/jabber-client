@@ -19,7 +19,7 @@ with XMPP (Jabber) protocol
 
 ## Running the application
 
-Download zip archive from this [link](https://github.com/axibase/jabber-test/releases/download/v1.0/jabber-test.zip).
+Download zip archive from this [link](https://github.com/axibase/jabber-test/releases/download/v1.3/jabber-test.zip).
 Extract archive contents to a new directory and navigate to it
 
 ```
