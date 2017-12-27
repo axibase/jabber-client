@@ -6,6 +6,8 @@ Standalone Java programs to perform feature testing of a Jabber server
 * [Text message test](jabber-test-text/README.md)
 * [Room test (group chat)](jabber-test-room/README.md)
 * [Image test](jabber-test-img/README.md)
+* [Echo test](jabber-test-echo/README.md)
+* [Items test](jabber-test-items/README.md)
 
 ## Prerequisites
 
