@@ -1,4 +1,4 @@
-# Test for discovering MUC service
+# Test for resending received messages
 
 This sample application is aimed to forward back all of the messages
 received with XMPP (Jabber) protocol.
@@ -31,7 +31,7 @@ Run extracted jar file with command using result from [login test](../jabber-tes
 enabling one of succeeded authentication mechanisms.
 
 ```
-java -jar jabber-test-room.jar \
+java -jar jabber-test-echo.jar \
     --user=user1@example.com \
     --password=user1_password \
     --host=example.com \
@@ -73,7 +73,7 @@ In case you faced some problems, try to run the application again with
 `--debug` option and examine `debug.log` file contents.
 
 ```
-java -jar jabber-test-room.jar \
+java -jar jabber-test-echo.jar \
     --user=user1@example.com \
     --password=user1_password \
     --host=example.com \
