@@ -22,6 +22,7 @@
         <module>jabber-test-core</module>
         <module>jabber-test-login</module>
         <module>jabber-test-text</module>
+        <module>jabber-test-self</module>
         <module>jabber-test-room</module>
         <module>jabber-test-img</module>
         <module>jabber-test-echo</module>
