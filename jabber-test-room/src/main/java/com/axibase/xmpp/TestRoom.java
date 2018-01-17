@@ -2,8 +2,6 @@ package com.axibase.xmpp;
 
 import com.axibase.xmpp.core.*;
 
-import java.util.List;
-
 public class TestRoom {
     public static void main(String[] args) {
         XmppClientConfig config = new XmppClientConfig(args);
@@ -47,5 +45,7 @@ public class TestRoom {
             e.printStackTrace();
         }
         System.out.println("Leave room: OK");
+
+        client.disconnect();
     }
 }

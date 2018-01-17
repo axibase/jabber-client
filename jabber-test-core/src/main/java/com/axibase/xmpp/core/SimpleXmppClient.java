@@ -4,6 +4,8 @@ package com.axibase.xmpp.core;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -13,6 +15,7 @@ import org.jivesoftware.smackx.disco.packet.DiscoverItems;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatException;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -90,7 +93,13 @@ public class SimpleXmppClient {
         SASLAuthentication.unBlacklistSASLMechanism(mechanism);
     }
 
+    public void disableRoster() {
+        Roster roster = Roster.getInstanceFor(xmppConnection);
+        roster.setRosterLoadedAtLogin(false);
+    }
+
     public void login() throws XmppClientException {
+
         try {
             xmppConnection.connect();
             Debug.info("Successfully connected to host");
@@ -116,12 +125,17 @@ public class SimpleXmppClient {
 
     public void handleMessages(MessageHandler mh) {
         ChatManager chatManager = ChatManager.getInstanceFor(xmppConnection);
-        chatManager.addIncomingListener((from, message, chat) -> {
-            mh.handleMessage(from.toString(), message.getBody(), new UserXmppChat(chat));
-        });
+        chatManager.addIncomingListener((from, message, chat) ->
+                mh.handleMessage(from.toString(), message.getBody(), new UserXmppChat(chat)));
     }
 
-    public SimpleXmppChat getChatWith(String strJid) throws XmppClientException {
+    public void handleReceipts() {
+        DeliveryReceiptManager drm = DeliveryReceiptManager.getInstanceFor(xmppConnection);
+        drm.addReceiptReceivedListener((fromJid, toJid, receiptId, receipt) ->
+                Debug.message("Receipt received from " + fromJid.toString() + " to " + toJid.toString()));
+    }
+
+    private Chat getChatRaw(String strJid) throws XmppClientException {
         EntityBareJid jid;
         try {
             jid = JidCreate.entityBareFrom(strJid);
@@ -130,9 +144,11 @@ public class SimpleXmppClient {
         }
 
         ChatManager chatManager = ChatManager.getInstanceFor(xmppConnection);
-        Chat chat = chatManager.chatWith(jid);
+        return chatManager.chatWith(jid);
+    }
 
-        return new UserXmppChat(chat);
+    public SimpleXmppChat getChatWith(String strJid) throws XmppClientException {
+        return new UserXmppChat(getChatRaw(strJid));
     }
 
     public SimpleXmppChat getChatRoom(String strJid, String nickName, String password) throws XmppClientException {
@@ -186,5 +202,16 @@ public class SimpleXmppClient {
             }
         }
         return featureServices;
+    }
+
+    public void setStatus(String status) throws XmppClientException {
+        Presence presence = new Presence(Presence.Type.available);
+        presence.setStatus(status);
+
+        try {
+            xmppConnection.sendStanza(presence);
+        } catch (SmackException.NotConnectedException | InterruptedException e) {
+            throw new XmppClientException("Cannot send status");
+        }
     }
 }

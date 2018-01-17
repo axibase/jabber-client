@@ -2,6 +2,7 @@ package com.axibase.xmpp.core;
 
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.XmlStringBuilder;
+import org.jivesoftware.smackx.receipts.DeliveryReceiptRequest;
 import org.jivesoftware.smackx.xhtmlim.XHTMLManager;
 import org.jivesoftware.smackx.xhtmlim.XHTMLText;
 
@@ -10,13 +11,22 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 abstract class AbstractXmppChat implements SimpleXmppChat {
+    private boolean doCheck = false;
     protected abstract Message newMessage();
     protected abstract void sendMessage(Message m) throws XmppClientException;
+
+    @Override
+    public void enableCheck() {
+        doCheck = true;
+    }
 
     @Override
     public void sendText(String text) throws XmppClientException {
         Message m = newMessage();
         m.setBody(text);
+        if (doCheck) {
+            DeliveryReceiptRequest.addTo(m);
+        }
         sendMessage(m);
     }
 

@@ -9,6 +9,7 @@ Standalone Java programs to perform feature testing of a Jabber server
 * [Image test](jabber-test-img/README.md)
 * [Echo test](jabber-test-echo/README.md)
 * [Items test](jabber-test-items/README.md)
+* [Composite test](jabber-test-composite/README.md)
 
 ## Prerequisites
 

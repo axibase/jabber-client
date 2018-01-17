@@ -27,6 +27,7 @@
         <module>jabber-test-img</module>
         <module>jabber-test-echo</module>
         <module>jabber-test-items</module>
+        <module>jabber-test-composite</module>
     </modules>
 
     <build>
