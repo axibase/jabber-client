@@ -32,7 +32,7 @@ Run extracted jar file with command using result from [login test](../jabber-tes
 enabling one of succeeded authentication mechanisms
 
 ```
-java -jar jabber-test-compostie.jar \
+java -jar jabber-test-composite.jar \
     --user=user1@example.com \
     --password=user1_password \
     --host=example.com \
