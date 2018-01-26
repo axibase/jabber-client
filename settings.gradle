@@ -1,0 +1,20 @@
+rootProject.name = 'jabber-test'
+include ':jabber-test-core'
+include ':jabber-test-login'
+include ':jabber-test-text'
+include ':jabber-test-self'
+include ':jabber-test-room'
+include ':jabber-test-img'
+include ':jabber-test-echo'
+include ':jabber-test-items'
+include ':jabber-test-composite'
+
+project(':jabber-test-core').projectDir = "$rootDir/jabber-test-core" as File
+project(':jabber-test-login').projectDir = "$rootDir/jabber-test-login" as File
+project(':jabber-test-text').projectDir = "$rootDir/jabber-test-text" as File
+project(':jabber-test-self').projectDir = "$rootDir/jabber-test-self" as File
+project(':jabber-test-room').projectDir = "$rootDir/jabber-test-room" as File
+project(':jabber-test-img').projectDir = "$rootDir/jabber-test-img" as File
+project(':jabber-test-echo').projectDir = "$rootDir/jabber-test-echo" as File
+project(':jabber-test-items').projectDir = "$rootDir/jabber-test-items" as File
+project(':jabber-test-composite').projectDir = "$rootDir/jabber-test-composite" as File
