@@ -9,7 +9,6 @@ buildscript {
   }
 
 allprojects  {
-  //apply plugin: 'maven'
   apply plugin: 'idea'
 
   group = 'com.axibase.xmpp'
@@ -17,7 +16,6 @@ allprojects  {
 }
 
 subprojects {
-  project.buildDir = 'target'
 
   repositories {
     mavenLocal()
