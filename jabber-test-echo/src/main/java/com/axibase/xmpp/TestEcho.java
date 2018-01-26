@@ -20,6 +20,12 @@ public class TestEcho {
         }
         System.out.println("Login: OK");
 
+        try {
+            client.setStatus("Hello");
+        } catch (XmppClientException e) {
+            e.printStackTrace();
+        }
+
         client.handleMessages((from, message, chat) -> {
             Debug.message("Received message from " + from + ": " + message);
             try {

@@ -50,6 +50,48 @@ abstract class AbstractXmppChat implements SimpleXmppChat {
             text.optAttribute("alt", "img");
             text.optAttribute("src", ImageHelper.loadAsDataUrl(srcPath));
             text.closeEmptyElement();
+
+            xhtmlText.appendBrTag();
+            xhtmlText.append("Some string");
+            xhtmlText.appendBrTag();
+            xhtmlText.appendOpenEmTag();
+            xhtmlText.append("Emphasis");
+            xhtmlText.appendCloseEmTag();
+            xhtmlText.appendBrTag();
+            xhtmlText.appendOpenCodeTag();
+            xhtmlText.append("Code");
+            xhtmlText.appendCloseCodeTag();
+            xhtmlText.appendBrTag();
+            xhtmlText.appendOpenOrderedListTag(null);
+            xhtmlText.appendLineItemTag(null);
+            xhtmlText.append("Item1");
+            xhtmlText.appendCloseLineItemTag();
+            xhtmlText.appendLineItemTag(null);
+            xhtmlText.append("Item2");
+            xhtmlText.appendCloseLineItemTag();
+            xhtmlText.appendCloseOrderedListTag();
+            xhtmlText.appendBrTag();
+            text.append(" <table>\n" +
+                    "  <tr>\n" +
+                    "    <th>Firstname</th>\n" +
+                    "    <th>Lastname</th>\n" +
+                    "    <th>Age</th>\n" +
+                    "  </tr>\n" +
+                    "  <tr>\n" +
+                    "    <td>Jill</td>\n" +
+                    "    <td>Smith</td>\n" +
+                    "    <td>50</td>\n" +
+                    "  </tr>\n" +
+                    "  <tr>\n" +
+                    "    <td>Eve</td>\n" +
+                    "    <td>Jackson</td>\n" +
+                    "    <td>94</td>\n" +
+                    "  </tr>\n" +
+                    "</table> ");
+            xhtmlText.appendBrTag();
+            text.append("<a href=\"https://google.com\">Go to google</a>");
+
+
             xhtmlText.appendCloseBodyTag();
 
             XHTMLManager.addBody(m, xhtmlText);

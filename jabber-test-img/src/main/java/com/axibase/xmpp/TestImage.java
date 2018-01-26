@@ -34,5 +34,7 @@ public class TestImage {
             throw Errors.errorExit("Cannot send image", e);
         }
         System.out.println("Sending message: OK");
+
+        client.disconnect();
     }
 }

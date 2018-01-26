@@ -5,10 +5,13 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.TLSUtils;
+import org.jivesoftware.smackx.delay.provider.AbstractDelayInformationProvider;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.disco.packet.DiscoverItems;
@@ -22,9 +25,17 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
+import javax.net.ssl.*;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class SimpleXmppClient {
@@ -46,14 +57,26 @@ public class SimpleXmppClient {
                     .setXmppDomain(config.getDomain())
                     .setResource(CLIENT_RESOURCE)
                     .setHost(config.getHost())
-                    .setPort(config.getPort());
-            if (config.getInsecure()) {
-                configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-            }
+                    .setPort(config.getPort())
+                    .setSendPresence(true);
+//            if (config.getInsecure()) {
+//                configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+//            }
+            ProviderManager.addExtensionProvider("x", "jabber:x:delay", new AbstractDelayInformationProvider() {
+                @Override
+                protected Date parseDate(String string) throws ParseException {
+                    SimpleDateFormat sfd = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
+                    return sfd.parse(string);
+                }
+            });
+            TLSUtils.acceptAllCertificates(configBuilder);
+            TLSUtils.disableHostnameVerificationForTlsCertificates(configBuilder);
             configBuilder.setDebuggerEnabled(config.getDebug());
             connectionConfig = configBuilder.build();
         } catch (XmppStringprepException e) {
             throw new XmppClientException("Incorrect user ID", e);
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            throw new XmppClientException("Security exception", e);
         }
 
         String auth = config.getAuth();
@@ -65,6 +88,7 @@ public class SimpleXmppClient {
 
         xmppConnection = new XMPPTCPConnection(connectionConfig);
         xmppConnection.setFromMode(XMPPConnection.FromMode.USER);
+        xmppConnection.setReplyTimeout(50000);
     }
 
     public static Collection<String> getSaslMechanisms() {

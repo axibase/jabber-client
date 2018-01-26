@@ -30,6 +30,7 @@ public class TestRoom {
         } catch (XmppClientException e) {
             throw Errors.errorExit("Cannot join the room", e);
         }
+        Debug.message("Joined the room");
         System.out.println("Join room: OK");
 
         try {
