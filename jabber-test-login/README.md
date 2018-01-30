@@ -18,7 +18,7 @@ server with different SASL mechanism
 
 ## Running the application
 
-Download zip archive from the [link](https://github.com/axibase/jabber-test/releases/download/v1.4/jabber-test.zip).
+Download zip archive from the [link](https://github.com/axibase/jabber-test/releases/download/v1.6/jabber-test.zip).
 Extract archive contents to a new directory and navigate to it
 
 ```

@@ -9,6 +9,7 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.TLSUtils;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.disco.packet.DiscoverItems;
@@ -23,6 +24,8 @@ import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,13 +50,17 @@ public class SimpleXmppClient {
                     .setResource(CLIENT_RESOURCE)
                     .setHost(config.getHost())
                     .setPort(config.getPort());
+            configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible);
             if (config.getInsecure()) {
-                configBuilder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+                TLSUtils.acceptAllCertificates(configBuilder);
+                TLSUtils.disableHostnameVerificationForTlsCertificates(configBuilder);
             }
             configBuilder.setDebuggerEnabled(config.getDebug());
             connectionConfig = configBuilder.build();
         } catch (XmppStringprepException e) {
             throw new XmppClientException("Incorrect user ID", e);
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new XmppClientException("TLS configuration error", e);
         }
 
         String auth = config.getAuth();

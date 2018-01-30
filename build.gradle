@@ -1,12 +1,12 @@
 buildscript {
-    repositories {
-      jcenter()
-    }
-
-    dependencies {
-      classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
-    }
+  repositories {
+    jcenter()
   }
+
+  dependencies {
+    classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+  }
+}
 
 allprojects  {
   apply plugin: 'idea'
@@ -16,7 +16,6 @@ allprojects  {
 }
 
 subprojects {
-
   repositories {
     mavenLocal()
     maven { url "https://repo.maven.apache.org/maven2" }
@@ -27,4 +26,23 @@ subprojects {
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
+}
+
+ext {
+    coreProject = project(":jabber-test-core")
+    appProjects = subprojects - coreProject
+}
+
+task makeZip(type:Zip) {
+    configure(appProjects) {
+        from(libsDir) {
+            include shadowJar.archiveName
+            rename shadowJar.archiveName, "${project.name}.jar"
+        }
+    }
+    from(rootProject.rootDir) {
+        include "xmpp.png"
+    }
+    destinationDir rootProject.rootDir
+    baseName rootProject.name
 }
